@@ -10,9 +10,9 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="text-2xl font-bold bg-gradient-hero bg-clip-text text-transparent">
-              IMPEARL
+          <Link to="/" className="flex items-center">
+            <div className="bg-black px-4 py-2 rounded">
+              <span className="text-2xl font-bold text-white">IMPEARL</span>
             </div>
           </Link>
 
