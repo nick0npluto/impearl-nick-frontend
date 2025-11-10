@@ -20,11 +20,9 @@ const Index = () => {
         }}
       >
         <div className="container mx-auto text-center animate-fade-in">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6">
-            Empower your business with AI-driven
-            <br />
+          <h1 className="text-6xl sm:text-7xl md:text-8xl font-bold mb-6">
             <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              recommendations and real human expertise
+              IMPEARL
             </span>
           </h1>
           <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
