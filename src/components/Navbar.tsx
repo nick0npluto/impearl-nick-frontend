@@ -29,8 +29,8 @@ const Navbar = () => {
             <Link to="/support" className="text-foreground hover:text-primary transition-colors">
               Support
             </Link>
-            <Button variant="default" size="sm">
-              Get Started
+            <Button variant="default" size="sm" asChild>
+              <Link to="/register">Get Started</Link>
             </Button>
           </div>
 
@@ -72,8 +72,8 @@ const Navbar = () => {
             >
               Support
             </Link>
-            <Button variant="default" size="sm" className="w-full">
-              Get Started
+            <Button variant="default" size="sm" className="w-full" asChild>
+              <Link to="/register" onClick={() => setMobileMenuOpen(false)}>Get Started</Link>
             </Button>
           </div>
         )}

@@ -27,7 +27,7 @@ const Index = () => {
           </h1>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button variant="hero" size="lg" asChild>
-              <Link to="/features">
+              <Link to="/register">
                 Get Started <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
