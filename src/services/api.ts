@@ -139,6 +139,65 @@ class ApiService {
   async getFreelancer(id: string) {
     return await this.request(`/profile/freelancer/${id}`);
   }
+
+  // Favorites/Bookmarks methods (currently using localStorage)
+  // TODO: Replace with backend API calls when ready
+  
+  getFavoritesFromStorage() {
+    const saved = localStorage.getItem("favorites");
+    return saved ? JSON.parse(saved) : [];
+  }
+
+  saveFavoritesToStorage(favorites: string[]) {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }
+
+  addFavorite(freelancerId: string) {
+    const favorites = this.getFavoritesFromStorage();
+    if (!favorites.includes(freelancerId)) {
+      favorites.push(freelancerId);
+      this.saveFavoritesToStorage(favorites);
+    }
+    return favorites;
+  }
+
+  removeFavorite(freelancerId: string) {
+    const favorites = this.getFavoritesFromStorage();
+    const newFavorites = favorites.filter((id: string) => id !== freelancerId);
+    this.saveFavoritesToStorage(newFavorites);
+    return newFavorites;
+  }
+
+  isFavorite(freelancerId: string) {
+    const favorites = this.getFavoritesFromStorage();
+    return favorites.includes(freelancerId);
+  }
+
+  clearAllFavorites() {
+    this.saveFavoritesToStorage([]);
+    return [];
+  }
+
+  async getBookmarkedFreelancers() {
+    const favoriteIds = this.getFavoritesFromStorage();
+    
+    if (favoriteIds.length === 0) {
+      return { success: true, freelancers: [] };
+    }
+
+    // Fetch all freelancers
+    const response = await this.getFreelancers();
+    
+    if (response.success) {
+      // Filter to only favorited ones
+      const bookmarked = response.freelancers.filter((f: any) =>
+        favoriteIds.includes(f._id)
+      );
+      return { success: true, freelancers: bookmarked };
+    }
+
+    return { success: false, freelancers: [] };
+  }
 }
 
 export default new ApiService();

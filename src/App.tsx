@@ -19,6 +19,7 @@ import EditProfile from "./pages/EditProfile";
 import PostJob from "./pages/PostJob";
 import BrowseJobs from "./pages/BrowseJobs";
 import CostCalculator from "./pages/CostCalculator";
+import BookmarkedFreelancers from "./pages/BookmarkedFreelancers";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
           <Route path="/marketplace" element={<Marketplace />} />
           <Route path="/freelancer/:id" element={<FreelancerDetail />} />
           <Route path="/compare" element={<CompareFreelancers />} />
+          <Route path="/bookmarks" element={<BookmarkedFreelancers />} />
           
           {/* Dashboard Feature Routes */}
           <Route path="/profile" element={<EditProfile />} />

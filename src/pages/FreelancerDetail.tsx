@@ -82,32 +82,28 @@ const FreelancerDetail = () => {
   };
 
   const checkFavorite = () => {
-    const favorites = localStorage.getItem("favorites");
-    if (favorites) {
-      const favArray = JSON.parse(favorites);
-      setIsFavorite(favArray.includes(id));
-    }
+    const isFav = ApiService.isFavorite(id!);
+    setIsFavorite(isFav);
   };
 
   const toggleFavorite = () => {
-    const favorites = localStorage.getItem("favorites");
-    let favArray = favorites ? JSON.parse(favorites) : [];
-
     if (isFavorite) {
-      favArray = favArray.filter((fId: string) => fId !== id);
+      ApiService.removeFavorite(id!);
+      setIsFavorite(false);
+      
+      toast({
+        title: "Removed from favorites",
+        description: "Freelancer removed from your favorites",
+      });
     } else {
-      favArray.push(id);
+      ApiService.addFavorite(id!);
+      setIsFavorite(true);
+      
+      toast({
+        title: "Added to favorites",
+        description: "Freelancer added to your favorites",
+      });
     }
-
-    localStorage.setItem("favorites", JSON.stringify(favArray));
-    setIsFavorite(!isFavorite);
-
-    toast({
-      title: isFavorite ? "Removed from favorites" : "Added to favorites",
-      description: isFavorite
-        ? "Freelancer removed from your favorites"
-        : "Freelancer added to your favorites",
-    });
   };
 
   const handleSendRequest = async () => {

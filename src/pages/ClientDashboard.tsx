@@ -61,8 +61,8 @@ const ClientDashboard = () => {
     },
     {
       icon: Bookmark,
-      title: "Bookmarked Tools",
-      description: "Your saved automation solutions",
+      title: "Bookmarked Freelancers",
+      description: "Your saved freelancers for future projects",
       link: "/bookmarks",
     },
     {
