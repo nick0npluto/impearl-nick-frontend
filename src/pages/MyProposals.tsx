@@ -34,6 +34,7 @@ const MyProposals: React.FC = () => {
   const [stats, setStats] = useState<ProposalStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
+  const [error, setError] = useState<string>("");
 
   useEffect(() => {
     if (!apiService.getToken()) {
@@ -46,11 +47,14 @@ const MyProposals: React.FC = () => {
 
   const fetchProposals = async () => {
     try {
+      setError("");
       const response = await apiService.getFreelancerProposals();
-      setProposals(response.proposals);
+      setProposals(response.proposals || []);
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Fetch proposals error:", error);
+      setError(error.message || "Failed to load proposals");
+      setProposals([]);
       setLoading(false);
     }
   };
@@ -58,8 +62,15 @@ const MyProposals: React.FC = () => {
   const fetchStats = async () => {
     try {
       const response = await apiService.getProposalStats();
-      setStats(response.stats);
-    } catch (error) {
+      setStats(response.stats || {
+        totalProposals: 0,
+        pendingProposals: 0,
+        acceptedProposals: 0,
+        rejectedProposals: 0,
+        withdrawnProposals: 0,
+        acceptanceRate: "0"
+      });
+    } catch (error: any) {
       console.error("Fetch stats error:", error);
     }
   };
@@ -122,6 +133,15 @@ const MyProposals: React.FC = () => {
           ← Back to Dashboard
         </button>
       </div>
+
+      {error && (
+        <div style={styles.errorBox}>
+          <strong>Error:</strong> {error}
+          <button onClick={fetchProposals} style={styles.retryButton}>
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Stats */}
       {stats && (
@@ -188,11 +208,16 @@ const MyProposals: React.FC = () => {
       {/* Proposals List */}
       <div style={styles.proposalsSection}>
         {filteredProposals.length === 0 ? (
-          <p style={styles.emptyText}>
-            {filter === "all"
-              ? "No proposals yet. Start browsing jobs!"
-              : `No ${filter} proposals`}
-          </p>
+          <div style={styles.emptyContainer}>
+            <p style={styles.emptyText}>
+              {filter === "all"
+                ? "No proposals yet. Start browsing jobs!"
+                : `No ${filter} proposals`}
+            </p>
+            <button onClick={() => navigate("/jobs")} style={styles.browseButton}>
+              Browse Jobs
+            </button>
+          </div>
         ) : (
           <div style={styles.proposalsList}>
             {filteredProposals.map((proposal) => (
@@ -252,10 +277,10 @@ const MyProposals: React.FC = () => {
                   )}
                   {proposal.status === "accepted" && (
                     <button
-                      onClick={() => navigate("/messages")}
+                      onClick={() => navigate("/active-projects")}
                       style={styles.messagesButton}
                     >
-                      Go to Messages
+                      View Project
                     </button>
                   )}
                 </div>
@@ -296,6 +321,25 @@ const styles: { [key: string]: React.CSSProperties } = {
     textAlign: "center",
     padding: "50px",
     fontSize: "18px",
+  },
+  errorBox: {
+    backgroundColor: "#ffebee",
+    border: "1px solid #f44336",
+    borderRadius: "8px",
+    padding: "15px",
+    marginBottom: "20px",
+    color: "#c62828",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  retryButton: {
+    padding: "8px 16px",
+    backgroundColor: "#f44336",
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
   },
   statsGrid: {
     display: "grid",
@@ -347,10 +391,22 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: "10px",
     boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
   },
-  emptyText: {
+  emptyContainer: {
     textAlign: "center",
-    color: "#999",
     padding: "40px",
+  },
+  emptyText: {
+    color: "#999",
+    fontSize: "16px",
+    marginBottom: "20px",
+  },
+  browseButton: {
+    padding: "12px 30px",
+    backgroundColor: "#2196f3",
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
     fontSize: "16px",
   },
   proposalsList: {

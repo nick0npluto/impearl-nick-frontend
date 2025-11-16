@@ -140,6 +140,70 @@ class ApiService {
     return await this.request(`/profile/freelancer/${id}`);
   }
 
+  // ========== PROPOSALS ENDPOINTS ==========
+  async getFreelancerProposals() {
+    return await this.request('/proposals/freelancer');
+  }
+
+  async getProposalStats() {
+    return await this.request('/proposals/stats/summary');
+  }
+
+  async createProposal(proposalData: any) {
+    return await this.request('/proposals', {
+      method: 'POST',
+      body: JSON.stringify(proposalData),
+    });
+  }
+
+  async withdrawProposal(proposalId: string) {
+    return await this.request(`/proposals/${proposalId}/withdraw`, {
+      method: 'PUT',
+    });
+  }
+
+  // ========== CONTRACTS ENDPOINTS ==========
+  async getContracts() {
+    return await this.request('/contracts');
+  }
+
+  async acceptContract(contractId: string) {
+    return await this.request(`/contracts/${contractId}/accept`, {
+      method: 'PUT',
+    });
+  }
+
+  async completeContract(contractId: string) {
+    return await this.request(`/contracts/${contractId}/complete`, {
+      method: 'PUT',
+    });
+  }
+
+  async updateContractStatus(contractId: string, status: string) {
+    return await this.request(`/contracts/${contractId}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  // ========== PAYMENTS/EARNINGS ENDPOINTS ==========
+  async getPayments() {
+    return await this.request('/payments');
+  }
+
+  async getPaymentStats() {
+    return await this.request('/payments/stats/summary');
+  }
+
+  // ========== REVIEWS ENDPOINTS ==========
+  async getReviews() {
+    return await this.request('/reviews');
+  }
+
+  async getFreelancerReviews(freelancerId: string) {
+    return await this.request(`/reviews/freelancer/${freelancerId}`);
+  }
+
   // Favorites/Bookmarks methods (currently using localStorage)
   // TODO: Replace with backend API calls when ready
   

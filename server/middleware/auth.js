@@ -18,8 +18,9 @@ const auth = (req, res, next) => {
       process.env.JWT_SECRET || 'your-secret-key-change-in-production'
     );
 
-    // Add user ID to request
-    req.userId = decoded.userId;
+    // Add user object to request (consistent with proposals.js usage)
+    req.user = { userId: decoded.userId };
+    req.userId = decoded.userId; // Keep for backward compatibility
     next();
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {

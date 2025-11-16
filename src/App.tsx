@@ -63,10 +63,13 @@ const App = () => (
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/pay-center" element={<PayCenter />} />
           
-          {/* Freelancer Features */}
+          {/* Freelancer Features - Support both URL patterns */}
+          <Route path="/proposals" element={<MyProposals />} />
           <Route path="/my-proposals" element={<MyProposals />} />
+          <Route path="/projects" element={<ActiveProjects />} />
           <Route path="/active-projects" element={<ActiveProjects />} />
           <Route path="/earnings" element={<Earnings />} />
+          <Route path="/reviews" element={<ReviewsRatings />} />
           <Route path="/reviews-ratings" element={<ReviewsRatings />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
