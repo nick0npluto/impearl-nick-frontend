@@ -8,10 +8,12 @@ import Navbar from "@/components/Navbar";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/api";
+import { useAuth } from "@/hooks/useAuth";
 
 const Login = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { refresh } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -34,6 +36,7 @@ const Login = () => {
 
     try {
       const response = await ApiService.login(formData.email, formData.password);
+      await refresh();
       
       toast({
         title: "Success",

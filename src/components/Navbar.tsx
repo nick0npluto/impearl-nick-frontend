@@ -32,11 +32,11 @@ const Navbar = () => {
                 <Link to="/notifications" className="text-foreground hover:text-primary transition-colors">
                   Notifications
                 </Link>
+                <Link to="/support" className="text-foreground hover:text-primary transition-colors">
+                  Support
+                </Link>
               </>
             )}
-            <Link to="/support" className="text-foreground hover:text-primary transition-colors">
-              Support
-            </Link>
             {user ? (
               <Button variant="outline" size="sm" onClick={logout}>
                 Log Out
@@ -88,15 +88,15 @@ const Navbar = () => {
                 >
                   Notifications
                 </Link>
+                <Link
+                  to="/support"
+                  className="block text-foreground hover:text-primary transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Support
+                </Link>
               </>
             )}
-            <Link
-              to="/support"
-              className="block text-foreground hover:text-primary transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Support
-            </Link>
             {user ? (
               <Button variant="outline" size="sm" className="w-full" onClick={() => { logout(); setMobileMenuOpen(false); }}>
                 Log Out
