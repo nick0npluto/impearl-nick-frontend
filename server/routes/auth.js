@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 // Generate JWT Token
-const generateToken = (userId) => {
+const generateToken = (userId, userType) => {
   return jwt.sign(
-    { userId }, 
+    { userId, userType }, 
     process.env.JWT_SECRET || 'your-secret-key-change-in-production',
     { expiresIn: '7d' }
   );
@@ -25,10 +25,10 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    if (!['freelancer', 'business'].includes(userType)) {
+    if (!['freelancer', 'business', 'service_provider'].includes(userType)) {
       return res.status(400).json({
         success: false,
-        message: 'User type must be either freelancer or business'
+        message: 'User type must be freelancer, business, or service provider'
       });
     }
 
@@ -51,7 +51,7 @@ router.post('/register', async (req, res) => {
     await user.save();
 
     // Generate token
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, user.userType);
 
     res.status(201).json({
       success: true,
@@ -109,7 +109,7 @@ router.post('/login', async (req, res) => {
     await user.save();
 
     // Generate token
-    const token = generateToken(user._id);
+    const token = generateToken(user._id, user.userType);
 
     res.json({
       success: true,
@@ -119,9 +119,11 @@ router.post('/login', async (req, res) => {
         id: user._id,
         email: user.email,
         userType: user.userType,
-        hasProfile: user.userType === 'freelancer' 
-          ? !!user.freelancerProfile?.name 
-          : !!user.businessProfile?.businessName
+        hasProfile: user.userType === 'freelancer'
+          ? !!user.freelancerProfile?.name
+          : user.userType === 'business'
+            ? !!user.businessProfile?.businessName
+            : !!user.serviceProviderProfile?.companyName
       }
     });
   } catch (error) {
@@ -166,9 +168,11 @@ router.get('/verify', async (req, res) => {
         id: user._id,
         email: user.email,
         userType: user.userType,
-        hasProfile: user.userType === 'freelancer' 
-          ? !!user.freelancerProfile?.name 
-          : !!user.businessProfile?.businessName
+        hasProfile: user.userType === 'freelancer'
+          ? !!user.freelancerProfile?.name
+          : user.userType === 'business'
+            ? !!user.businessProfile?.businessName
+            : !!user.serviceProviderProfile?.companyName
       }
     });
   } catch (error) {

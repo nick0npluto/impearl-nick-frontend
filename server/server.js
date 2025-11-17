@@ -14,29 +14,38 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/impearl', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB Connected Successfully'))
-.catch((err) => console.error('MongoDB Connection Error:', err));
+mongoose
+  .connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/impearl', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('MongoDB Connected Successfully'))
+  .catch((err) => console.error('MongoDB Connection Error:', err));
 
 // Routes
 const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/profile');
+const marketplaceRoutes = require('./routes/marketplace');
+const qnaRoutes = require('./routes/qna');
+const engagementRoutes = require('./routes/engagements');
 const contractRoutes = require('./routes/contracts');
-const messageRoutes = require('./routes/messages');
 const paymentRoutes = require('./routes/payments');
-const analyticsRoutes = require('./routes/analytics');
-const proposalRoutes = require('./routes/proposals');
+const messageRoutes = require('./routes/messages');
+const notificationRoutes = require('./routes/notifications');
+const reviewRoutes = require('./routes/reviews');
+const supportRoutes = require('./routes/support');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/marketplace', marketplaceRoutes);
+app.use('/api/qna', qnaRoutes);
+app.use('/api/engagements', engagementRoutes);
 app.use('/api/contracts', contractRoutes);
-app.use('/api/messages', messageRoutes);
 app.use('/api/payments', paymentRoutes);
-app.use('/api/analytics', analyticsRoutes);
-app.use('/api/proposals', proposalRoutes);
+app.use('/api/messages', messageRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/support', supportRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
@@ -46,18 +55,18 @@ app.get('/api/health', (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).json({ 
-    success: false, 
+  res.status(500).json({
+    success: false,
     message: 'Something went wrong!',
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    error: process.env.NODE_ENV === 'development' ? err.message : undefined,
   });
 });
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).json({ 
-    success: false, 
-    message: 'Route not found' 
+  res.status(404).json({
+    success: false,
+    message: 'Route not found',
   });
 });
 

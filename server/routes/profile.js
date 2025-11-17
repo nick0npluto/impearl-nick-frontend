@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const BusinessProfileModel = require('../models/BusinessProfile');
+const FreelancerProfileModel = require('../models/FreelancerProfile');
+const ServiceProviderProfileModel = require('../models/ServiceProviderProfile');
 const auth = require('../middleware/auth');
 
 // Get user profile
@@ -67,6 +70,10 @@ router.post('/freelancer', auth, async (req, res) => {
     }
 
     // Update freelancer profile
+    const parsedSkills = expertise
+      ? expertise.split(',').map(skill => skill.trim()).filter(Boolean)
+      : [];
+
     user.freelancerProfile = {
       name,
       expertise,
@@ -81,6 +88,22 @@ router.post('/freelancer', auth, async (req, res) => {
     };
 
     await user.save();
+
+    await FreelancerProfileModel.findOneAndUpdate(
+      { user: user._id },
+      {
+        user: user._id,
+        headline: name,
+        skills: parsedSkills,
+        yearsExperience,
+        hourlyRate: hourlyRate ? parseFloat(hourlyRate) : undefined,
+        availability: availability || 'not-available',
+        industries: [],
+        portfolioUrl: portfolioLinks || '',
+        bio: pastProjects || '',
+      },
+      { upsert: true, new: true }
+    );
 
     res.json({
       success: true,
@@ -147,6 +170,21 @@ router.post('/business', auth, async (req, res) => {
 
     await user.save();
 
+    await BusinessProfileModel.findOneAndUpdate(
+      { user: user._id },
+      {
+        user: user._id,
+        businessName,
+        industry,
+        companySize: companySize || '',
+        goals,
+        requiredSkills: requiredSkills || '',
+        websiteUrl: website || '',
+        description: description || ''
+      },
+      { upsert: true, new: true }
+    );
+
     res.json({
       success: true,
       message: 'Business profile created successfully',
@@ -157,6 +195,87 @@ router.post('/business', auth, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error creating business profile',
+      error: error.message
+    });
+  }
+});
+
+// Create/Update Service Provider Profile
+router.post('/service-provider', auth, async (req, res) => {
+  try {
+    const {
+      companyName,
+      websiteUrl,
+      industryFocus,
+      integrations,
+      description
+    } = req.body;
+
+    if (!companyName || !description) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide company name and description'
+      });
+    }
+
+    const user = await User.findById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    if (user.userType !== 'service_provider') {
+      return res.status(403).json({
+        success: false,
+        message: 'Only service providers can create a service provider profile'
+      });
+    }
+
+    const parsedIndustryFocus = Array.isArray(industryFocus)
+      ? industryFocus
+      : (industryFocus ? industryFocus.split(',').map(item => item.trim()).filter(Boolean) : []);
+    const parsedIntegrations = Array.isArray(integrations)
+      ? integrations
+      : (integrations ? integrations.split(',').map(item => item.trim()).filter(Boolean) : []);
+
+    user.serviceProviderProfile = {
+      companyName,
+      websiteUrl: websiteUrl || '',
+      industryFocus: parsedIndustryFocus,
+      integrations: parsedIntegrations,
+      description,
+      rating: user.serviceProviderProfile?.rating || 0,
+      reviewCount: user.serviceProviderProfile?.reviewCount || 0
+    };
+
+    await user.save();
+
+    await ServiceProviderProfileModel.findOneAndUpdate(
+      { user: user._id },
+      {
+        user: user._id,
+        companyName,
+        websiteUrl: websiteUrl || '',
+        industryFocus: parsedIndustryFocus,
+        integrations: parsedIntegrations,
+        description
+      },
+      { upsert: true, new: true }
+    );
+
+    res.json({
+      success: true,
+      message: 'Provider profile created successfully',
+      user: user.toJSON()
+    });
+  } catch (error) {
+    console.error('Create service provider profile error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error creating service provider profile',
       error: error.message
     });
   }
@@ -208,6 +327,57 @@ router.get('/freelancer/:id', auth, async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Error fetching freelancer',
+      error: error.message
+    });
+  }
+});
+
+// Get all service providers
+router.get('/service-providers', auth, async (req, res) => {
+  try {
+    const providers = await User.find({
+      userType: 'service_provider',
+      'serviceProviderProfile.companyName': { $exists: true, $ne: '' }
+    }).select('-password');
+
+    res.json({
+      success: true,
+      providers
+    });
+  } catch (error) {
+    console.error('Get service providers error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching service providers',
+      error: error.message
+    });
+  }
+});
+
+// Get single service provider
+router.get('/service-provider/:id', auth, async (req, res) => {
+  try {
+    const provider = await User.findOne({
+      _id: req.params.id,
+      userType: 'service_provider'
+    }).select('-password');
+
+    if (!provider) {
+      return res.status(404).json({
+        success: false,
+        message: 'Service provider not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      provider
+    });
+  } catch (error) {
+    console.error('Get service provider error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching service provider',
       error: error.message
     });
   }

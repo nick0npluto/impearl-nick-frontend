@@ -1,52 +1,52 @@
 const mongoose = require('mongoose');
 
-const contractSchema = new mongoose.Schema({
-  businessId: {
+const ContractSchema = new mongoose.Schema({
+  engagementRequest: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'EngagementRequest',
     required: true
   },
-  freelancerId: {
+  business: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'BusinessProfile',
     required: true
   },
-  projectTitle: {
+  targetType: {
+    type: String,
+    enum: ['freelancer', 'service_provider'],
+    required: true
+  },
+  targetFreelancer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'FreelancerProfile'
+  },
+  targetProvider: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ServiceProviderProfile'
+  },
+  title: {
     type: String,
     required: true
   },
-  projectDescription: {
+  description: {
     type: String,
     required: true
   },
-  budget: {
+  agreedPrice: {
     type: Number,
     required: true
   },
-  deadline: {
-    type: Date,
-    required: true
+  currency: {
+    type: String,
+    default: 'USD'
   },
   status: {
     type: String,
-    enum: ['pending', 'active', 'completed', 'cancelled'],
-    default: 'pending'
-  },
-  review: {
-    rating: {
-      type: Number,
-      min: 1,
-      max: 5
-    },
-    comment: String,
-    createdAt: Date
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  acceptedAt: Date,
-  completedAt: Date
+    enum: ['active', 'completed'],
+    default: 'active'
+  }
+}, {
+  timestamps: true
 });
 
-module.exports = mongoose.model('Contract', contractSchema);
+module.exports = mongoose.model('Contract', ContractSchema);

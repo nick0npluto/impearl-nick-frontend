@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema({
   },
   userType: {
     type: String,
-    enum: ['freelancer', 'business'],
+    enum: ['freelancer', 'business', 'service_provider'],
     required: [true, 'User type is required']
   },
   createdAt: {
@@ -108,6 +108,39 @@ const UserSchema = new mongoose.Schema({
     },
     address: {
       type: String
+    }
+  },
+
+  // Provider Profile Fields
+  serviceProviderProfile: {
+    companyName: {
+      type: String,
+      trim: true
+    },
+    websiteUrl: {
+      type: String,
+      trim: true
+    },
+    industryFocus: {
+      type: [String],
+      default: []
+    },
+    integrations: {
+      type: [String],
+      default: []
+    },
+    description: {
+      type: String
+    },
+    rating: {
+      type: Number,
+      min: 0,
+      max: 5,
+      default: 0
+    },
+    reviewCount: {
+      type: Number,
+      default: 0
     }
   }
 }, {
