@@ -14,16 +14,13 @@ import {
   Briefcase,
   FileText,
   FolderOpen,
-  DollarSign,
   Star,
   MessageSquare,
-  TrendingUp,
   HelpCircle,
   Loader2,
   Bell,
   CheckCircle2,
   ClipboardList,
-  Rocket,
 } from "lucide-react";
 
 interface Engagement {
@@ -141,6 +138,12 @@ const formatDate = (value?: string) => {
       link: "/engagements",
     },
     {
+      icon: ClipboardList,
+      title: "Find Businesses",
+      description: "Browse companies and send interests",
+      link: "/businesses",
+    },
+    {
       icon: FileText,
       title: "My Proposals",
       description: "Track your submitted proposals",
@@ -151,18 +154,6 @@ const formatDate = (value?: string) => {
       title: "Active Projects",
       description: "View and manage your current projects",
       link: "/projects",
-    },
-    {
-      icon: Rocket,
-      title: "Marketplace Listings",
-      description: "Publish or edit your offerings",
-      link: "/listings",
-    },
-    {
-      icon: DollarSign,
-      title: "Earnings",
-      description: "View your payment history and earnings",
-      link: "/earnings",
     },
     {
       icon: Star,
@@ -181,12 +172,6 @@ const formatDate = (value?: string) => {
       title: "Support",
       description: "Get help and access resources",
       link: "/support",
-    },
-    {
-      icon: TrendingUp,
-      title: "Analytics",
-      description: "Track your performance and growth",
-      link: "/analytics",
     },
   ];
 
@@ -433,7 +418,12 @@ const formatDate = (value?: string) => {
             </h2>
             <ChatInterface
               context={{
-                extras: `Freelancer: ${profile?.freelancerProfile?.name || ''}. Expertise: ${profile?.freelancerProfile?.expertise || ''}. Suggested businesses: ${recommendedBusinesses.map((biz: any) => biz.businessName).join(', ')}`,
+                role: "freelancer",
+                firstName: profile?.freelancerProfile?.firstName,
+                lastName: profile?.freelancerProfile?.lastName,
+                expertise: profile?.freelancerProfile?.expertise,
+                yearsExperience: profile?.freelancerProfile?.yearsExperience,
+                suggestedBusinesses: recommendedBusinesses.map((biz: any) => biz.businessName),
               }}
             />
           </div>

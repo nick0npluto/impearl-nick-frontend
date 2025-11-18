@@ -5,14 +5,41 @@ import { Send, Bot } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import ApiService from "@/services/api";
 
+type SupportedRole = "business" | "freelancer" | "service_provider";
+
+interface ChatContext {
+  role?: SupportedRole;
+  companyName?: string;
+  firstName?: string;
+  lastName?: string;
+  headline?: string;
+  expertise?: string;
+  yearsExperience?: string;
+  industryFocus?: string[];
+  keyOfferings?: string[];
+  suggestedBusinesses?: string[];
+  extras?: string;
+}
+
 interface ChatInterfaceProps {
-  context?: Record<string, any>;
+  context?: ChatContext;
 }
 
 const ChatInterface = ({ context = {} }: ChatInterfaceProps) => {
   const [message, setMessage] = useState("");
+  const getIntro = () => {
+    switch (context.role) {
+      case "freelancer":
+        return "Hey there! I'm IMPEARL AI. Want help landing more gigs, negotiating terms, or showcasing your automations?";
+      case "service_provider":
+        return "Hi! I'm IMPEARL AI. Need ideas to package your services, refine your pitch, or close more IMPEARL deals?";
+      default:
+        return "Hello! I'm IMPEARL AI. How can I help your business today?";
+    }
+  };
+
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "Hello! I'm IMPEARL AI. How can I help your business today?" }
+    { role: "assistant", content: getIntro() }
   ]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -69,7 +96,13 @@ const ChatInterface = ({ context = {} }: ChatInterfaceProps) => {
 
       <div className="flex space-x-2">
         <Input
-          placeholder="Ask IMPEARL anything about your business..."
+          placeholder={
+            context.role === "freelancer"
+              ? "Ask about proposals, pricing, deliverables..."
+              : context.role === "service_provider"
+              ? "Ask how to package offerings, reach businesses..."
+              : "Ask IMPEARL anything about your business..."
+          }
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyPress={(e) => e.key === "Enter" && handleSend()}

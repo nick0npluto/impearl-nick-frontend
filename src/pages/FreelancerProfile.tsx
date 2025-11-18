@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -24,23 +26,40 @@ const FreelancerProfile = () => {
   const { refresh } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    expertise: "",
+    firstName: "",
+    lastName: "",
     pastProjects: "",
     yearsExperience: "",
     portfolioLinks: "",
     hourlyRate: "",
     availability: "",
+    resumeUrl: "",
   });
+  const [resumeConfirmed, setResumeConfirmed] = useState(false);
+  const [expertiseInput, setExpertiseInput] = useState("");
+  const [expertiseTags, setExpertiseTags] = useState<string[]>([]);
+  const [experiences, setExperiences] = useState<Array<{ role: string; company: string; timeframe: string; skillsUsed: string; summary: string }>>([]);
+  const [experienceForm, setExperienceForm] = useState({ role: "", company: "", timeframe: "", skillsUsed: "", summary: "" });
+  const [education, setEducation] = useState<Array<{ school: string; degree: string; graduationYear: string }>>([]);
+  const [educationForm, setEducationForm] = useState({ school: "", degree: "", graduationYear: "" });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validation
-    if (!formData.name || !formData.expertise || !formData.yearsExperience) {
+    if (!formData.firstName || !expertiseTags.length || !formData.yearsExperience) {
       toast({
         title: "Missing Required Fields",
-        description: "Please fill in name, expertise, and years of experience.",
+        description: "Please add your first name, at least one expertise, and years of experience.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!resumeConfirmed) {
+      toast({
+        title: "Resume Required",
+        description: "Please upload your resume via Dropbox and confirm before submitting.",
         variant: "destructive",
       });
       return;
@@ -59,7 +78,13 @@ const FreelancerProfile = () => {
     setLoading(true);
 
     try {
-      await ApiService.createFreelancerProfile(formData);
+      await ApiService.createFreelancerProfile({
+        ...formData,
+        expertiseTags,
+        expertise: expertiseTags.join(", "),
+        experiences,
+        education,
+      });
 
       try {
         await refresh();
@@ -103,14 +128,14 @@ const FreelancerProfile = () => {
           <Card className="p-8 animate-slide-up">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label htmlFor="name" className="text-foreground">
-                  Full Name <span className="text-destructive">*</span>
+                <Label htmlFor="firstName" className="text-foreground">
+                  First Name <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Enter your full name"
+                  id="firstName"
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  placeholder="Enter your first name"
                   className="mt-2"
                   required
                   disabled={loading}
@@ -118,21 +143,57 @@ const FreelancerProfile = () => {
               </div>
 
               <div>
-                <Label htmlFor="expertise" className="text-foreground">
-                  Expertise & Skills <span className="text-destructive">*</span>
+                <Label htmlFor="lastName" className="text-foreground">
+                  Last Name
                 </Label>
                 <Input
-                  id="expertise"
-                  value={formData.expertise}
-                  onChange={(e) => setFormData({ ...formData, expertise: e.target.value })}
-                  placeholder="e.g., AI automation, workflow design, API integration"
+                  id="lastName"
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  placeholder="Enter your last name"
                   className="mt-2"
-                  required
                   disabled={loading}
                 />
-                <p className="text-sm text-muted-foreground mt-1">
-                  Separate skills with commas
-                </p>
+              </div>
+
+              <div>
+                <Label className="text-foreground">
+                  Expertise & Skills <span className="text-destructive">*</span>
+                </Label>
+                <div className="flex gap-2 mt-2">
+                  <Input
+                    value={expertiseInput}
+                    onChange={(e) => setExpertiseInput(e.target.value)}
+                    placeholder="Add a specialty (e.g., Zapier)"
+                    disabled={loading}
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      if (!expertiseInput.trim()) return;
+                      if (!expertiseTags.includes(expertiseInput.trim())) {
+                        setExpertiseTags([...expertiseTags, expertiseInput.trim()]);
+                      }
+                      setExpertiseInput("");
+                    }}
+                    disabled={loading}
+                  >
+                    Add
+                  </Button>
+                </div>
+                {!expertiseTags.length && (
+                  <p className="text-sm text-destructive mt-1">Add at least one skill.</p>
+                )}
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {expertiseTags.map((tag) => (
+                    <Badge key={tag} variant="secondary" className="flex items-center gap-1">
+                      {tag}
+                      <button type="button" onClick={() => setExpertiseTags(expertiseTags.filter((item) => item !== tag))}>
+                        ×
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
               </div>
 
               <div>
@@ -169,6 +230,152 @@ const FreelancerProfile = () => {
                   className="mt-2 min-h-[120px]"
                   disabled={loading}
                 />
+              </div>
+
+              <div>
+                <Label className="text-foreground">Resume Upload</Label>
+                <div className="flex flex-col gap-3 mt-2 sm:flex-row">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="whitespace-nowrap"
+                    onClick={() =>
+                      window.open("https://www.dropbox.com/request/1Ppv7LuYqjCQvrM1VbGj", "_blank", "noopener,noreferrer")
+                    }
+                  >
+                    Upload via Dropbox
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Use the Dropbox link above to send us your resume. No need to paste a link—our team will handle the rest.
+                </p>
+                <div className="flex items-center gap-2 mt-3">
+                  <Checkbox
+                    id="resume-confirm"
+                    checked={resumeConfirmed}
+                    onCheckedChange={(checked) => setResumeConfirmed(Boolean(checked))}
+                    disabled={loading}
+                  />
+                  <Label htmlFor="resume-confirm" className="text-sm text-muted-foreground">
+                    I uploaded my resume via Dropbox
+                  </Label>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-foreground">Work Experience</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      if (!experienceForm.role || !experienceForm.company) return;
+                      setExperiences((prev) => [...prev, experienceForm]);
+                      setExperienceForm({ role: "", company: "", timeframe: "", skillsUsed: "", summary: "" });
+                    }}
+                    disabled={loading}
+                  >
+                    Add Experience
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <Input
+                    placeholder="Role"
+                    value={experienceForm.role}
+                    onChange={(e) => setExperienceForm({ ...experienceForm, role: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Company"
+                    value={experienceForm.company}
+                    onChange={(e) => setExperienceForm({ ...experienceForm, company: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Timeframe (e.g., 2022 - Present)"
+                    value={experienceForm.timeframe}
+                    onChange={(e) => setExperienceForm({ ...experienceForm, timeframe: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Skills used"
+                    value={experienceForm.skillsUsed}
+                    onChange={(e) => setExperienceForm({ ...experienceForm, skillsUsed: e.target.value })}
+                  />
+                </div>
+                <Textarea
+                  placeholder="Summary of your impact"
+                  value={experienceForm.summary}
+                  onChange={(e) => setExperienceForm({ ...experienceForm, summary: e.target.value })}
+                  className="min-h-[80px]"
+                />
+                {experiences.length > 0 && (
+                  <div className="space-y-2">
+                    {experiences.map((exp, idx) => (
+                      <Card key={`${exp.role}-${idx}`} className="p-3 flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold text-foreground">{exp.role} @ {exp.company}</p>
+                          <p className="text-sm text-muted-foreground">{exp.timeframe || "Timeframe not specified"}</p>
+                          {exp.skillsUsed && <p className="text-xs text-muted-foreground">Skills: {exp.skillsUsed}</p>}
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={() => setExperiences(experiences.filter((_, i) => i !== idx))}>
+                          Remove
+                        </Button>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <Label className="text-foreground">Education</Label>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      if (!educationForm.school) return;
+                      setEducation((prev) => [...prev, educationForm]);
+                      setEducationForm({ school: "", degree: "", graduationYear: "" });
+                    }}
+                    disabled={loading}
+                  >
+                    Add Education
+                  </Button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <Input
+                    placeholder="School"
+                    value={educationForm.school}
+                    onChange={(e) => setEducationForm({ ...educationForm, school: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Degree / Program"
+                    value={educationForm.degree}
+                    onChange={(e) => setEducationForm({ ...educationForm, degree: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Graduation Year"
+                    value={educationForm.graduationYear}
+                    onChange={(e) => setEducationForm({ ...educationForm, graduationYear: e.target.value })}
+                  />
+                </div>
+                {education.length > 0 && (
+                  <div className="space-y-2">
+                    {education.map((item, idx) => (
+                      <Card key={`${item.school}-${idx}`} className="p-3 flex items-center justify-between">
+                        <div>
+                          <p className="font-semibold text-foreground">{item.school}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {item.degree || "Program"} {item.graduationYear && `• ${item.graduationYear}`}
+                          </p>
+                        </div>
+                        <Button variant="ghost" size="sm" onClick={() => setEducation(education.filter((_, i) => i !== idx))}>
+                          Remove
+                        </Button>
+                      </Card>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div>
