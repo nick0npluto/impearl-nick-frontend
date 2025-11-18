@@ -3,70 +3,70 @@ import FeatureCard from "@/components/FeatureCard";
 import {
   User,
   MessageSquare,
-  ShoppingCart,
+  Store,
   CreditCard,
   FileText,
-  Calculator,
   Star,
   Bot,
-  FileCode,
+  Bookmark,
+  LifeBuoy,
 } from "lucide-react";
 
 const Features = () => {
   const features = [
     {
       icon: User,
-      title: "Business & Freelancer Profile Setup",
+      title: "Role-Based Onboarding",
       description:
-        "Create comprehensive profiles that showcase your business needs or freelance expertise. Smart matching powered by AI.",
-    },
-    {
-      icon: MessageSquare,
-      title: "AI-Assisted Q&A and Recommendations",
-      description:
-        "Interactive questionnaire that analyzes your business and provides personalized automation and tool recommendations.",
-    },
-    {
-      icon: ShoppingCart,
-      title: "Marketplace Comparison",
-      description:
-        "Compare automation tools, services, and freelancers side-by-side. Filter by price, features, ratings, and compatibility.",
-    },
-    {
-      icon: CreditCard,
-      title: "Payment Center",
-      description:
-        "Secure payment processing for hiring freelancers and purchasing automation tools. Integrated invoicing and receipts.",
-    },
-    {
-      icon: FileText,
-      title: "Industry Templates",
-      description:
-        "Pre-built automation templates for various industries. Customize and deploy proven solutions for your sector.",
-    },
-    {
-      icon: Calculator,
-      title: "Cost Calculator",
-      description:
-        "Calculate ROI and costs for different automation solutions. Compare investment vs. expected returns over time.",
-    },
-    {
-      icon: Star,
-      title: "Community Ratings",
-      description:
-        "Real user reviews and ratings for tools and freelancers. Make informed decisions based on community feedback.",
+        "Purpose-built flows for businesses, freelancers, and service providers with Stripe payout gating and detailed profiles.",
     },
     {
       icon: Bot,
-      title: "Chatbot Support",
+      title: "AI Intake & Insights",
       description:
-        "24/7 AI chatbot assistance for questions about features, recommendations, and troubleshooting.",
+        "Guided Q&A captures company data and generates actionable automation insights, tool suggestions, and next steps.",
     },
     {
-      icon: FileCode,
-      title: "Base Model Generation",
+      icon: Store,
+      title: "Smart Marketplace Matching",
       description:
-        "Generate comprehensive automation plans and workflows tailored to your specific business requirements.",
+        "Browse vetted talent and services, bookmark favorites, and let IMPEARL recommend the best fits for every project.",
+    },
+    {
+      icon: FileText,
+      title: "Engagements & Contracts",
+      description:
+        "Negotiate proposals, counter offers, and manage contract terms with built-in status tracking for both sides.",
+    },
+    {
+      icon: CreditCard,
+      title: "Stripe Escrow Payments",
+      description:
+        "Businesses pay via Stripe Checkout, funds stay in escrow, and releases/disputes/refunds are handled with Connect payouts.",
+    },
+    {
+      icon: Bookmark,
+      title: "Collaboration Interests",
+      description:
+        "Freelancers and providers can send outreach, track interested businesses, and manage their marketplace listings.",
+    },
+    {
+      icon: MessageSquare,
+      title: "Messaging & Notifications",
+      description:
+        "Centralized threads with push-style notifications keep everyone aligned on deliverables, changes, and approvals.",
+    },
+    {
+      icon: Star,
+      title: "Reviews & Reputation",
+      description:
+        "Collect ratings from engagements, respond to feedback, and showcase proof directly on talent profiles.",
+    },
+    {
+      icon: LifeBuoy,
+      title: "Support & Guidance",
+      description:
+        "Always-on AI assistant plus Calendly access to human support for contract help, onboarding, or growth questions.",
     },
   ];
 

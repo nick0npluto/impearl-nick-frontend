@@ -1,7 +1,15 @@
 import { Button } from "@/components/ui/button";
 import FeatureCard from "@/components/FeatureCard";
 import Navbar from "@/components/Navbar";
-import { ArrowRight, Brain, Users, Cog } from "lucide-react";
+import {
+  ArrowRight,
+  Brain,
+  Users,
+  Cog,
+  CreditCard,
+  FileText,
+  Star,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import heroBg from "@/assets/hero-bg.jpg";
 
@@ -43,37 +51,65 @@ const Index = () => {
         <div className="container mx-auto">
           <div className="text-center mb-16 animate-slide-up">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
-              Bridge Small Business & Enterprise Automation
+              One platform for businesses, freelancers, and providers
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              An intelligent platform that bridges small businesses and enterprise-level automation.
-              Whether you're a startup or a growing company, IMPEARL uses AI to analyze your goals
-              and connect you with the right solutions.
+              Capture your needs with AI intake, match with vetted automation talent, negotiate contracts,
+              and pay through secure Stripe escrow—all without leaving IMPEARL.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-slide-up">
             <FeatureCard
               icon={Brain}
-              title="AI Recommendations"
-              description="Get personalized tool and automation recommendations based on your business needs and goals."
+              title="AI Intake & Matching"
+              description="Guided Q&A feeds our recommendation engine so businesses see the best talent, providers, and tooling instantly."
             />
             <FeatureCard
+              icon={FileText}
+              title="Contracts & Engagements"
+              description="Send proposals, counter offers, and track deal stages with built-in dashboards for every role."
+            />
+            <FeatureCard
+              icon={CreditCard}
+              title="Stripe Escrow Payments"
+              description="Businesses fund engagements via Stripe Checkout; payouts stay in escrow until work is approved."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Role Highlights */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">Built for every role</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Businesses get automation clarity, freelancers get qualified leads, and service providers showcase packaged offerings.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <FeatureCard
               icon={Users}
-              title="Freelancer Connections"
-              description="Connect with vetted freelancers who specialize in implementing the solutions you need."
+              title="Businesses"
+              description="Create detailed profiles, run intake sessions, bookmark talent, and release funds when deliverables land."
             />
             <FeatureCard
               icon={Cog}
-              title="Automation Planning"
-              description="Generate comprehensive automation plans tailored to your industry and business size."
+              title="Freelancers"
+              description="Collect reviews, manage proposals, and discovery outreach with Stripe Connect payouts enforced."
+            />
+            <FeatureCard
+              icon={Star}
+              title="Service Providers"
+              description="Highlight offerings, case studies, and support channels while syncing outreach and marketplace listings."
             />
           </div>
         </div>
       </section>
 
       {/* Features Preview */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-muted/30">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-background">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
             Everything You Need to Automate & Scale
