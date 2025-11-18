@@ -236,6 +236,13 @@ class ApiService {
     return await this.request(`/reviews?${params.toString()}`);
   }
 
+  async respondToReview(reviewId: string, body: string) {
+    return await this.request(`/reviews/${reviewId}/respond`, {
+      method: 'POST',
+      body: JSON.stringify({ body }),
+    });
+  }
+
   // Engagements & contracts
   async createEngagement(payload: any) {
     return await this.request('/engagements', {
@@ -279,6 +286,10 @@ class ApiService {
     return await this.request(`/contracts/${id}/complete`, {
       method: 'POST',
     });
+  }
+
+  async getContractHistory(id: string) {
+    return await this.request(`/contracts/${id}/history`);
   }
 
   async createCheckoutSession(contractId: string) {
@@ -392,6 +403,10 @@ class ApiService {
     });
   }
 
+  async getSentInterests() {
+    return await this.request('/matches/interests');
+  }
+
   // Favorites/Bookmarks methods (currently using localStorage)
   // TODO: Replace with backend API calls when ready
   
@@ -427,6 +442,35 @@ class ApiService {
 
   clearAllFavorites() {
     this.saveFavoritesToStorage([]);
+    return [];
+  }
+
+  getProviderBookmarks() {
+    const saved = localStorage.getItem("providerFavorites");
+    return saved ? JSON.parse(saved) : [];
+  }
+
+  saveProviderBookmarks(ids: string[]) {
+    localStorage.setItem("providerFavorites", JSON.stringify(ids));
+  }
+
+  addProviderBookmark(id: string) {
+    const current = this.getProviderBookmarks();
+    if (!current.includes(id)) {
+      current.push(id);
+      this.saveProviderBookmarks(current);
+    }
+    return current;
+  }
+
+  removeProviderBookmark(id: string) {
+    const filtered = this.getProviderBookmarks().filter((existing: string) => existing !== id);
+    this.saveProviderBookmarks(filtered);
+    return filtered;
+  }
+
+  clearProviderBookmarks() {
+    this.saveProviderBookmarks([]);
     return [];
   }
 
