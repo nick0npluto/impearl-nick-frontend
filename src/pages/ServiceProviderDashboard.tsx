@@ -17,7 +17,6 @@ import {
   MessageSquare,
   Users,
   ClipboardList,
-  DollarSign,
   HelpCircle,
   Loader2,
   Bell,
@@ -101,10 +100,13 @@ const ServiceProviderDashboard = () => {
     [contracts]
   );
 
+  const providerProfile = profile?.serviceProviderProfile;
   const profileStats = {
-    rating: profile?.serviceProviderProfile?.rating ?? 0,
-    reviewCount: profile?.serviceProviderProfile?.reviewCount ?? 0,
+    rating: providerProfile?.rating ?? 0,
+    reviewCount: providerProfile?.reviewCount ?? 0,
   };
+  const featuredOfferings = providerProfile?.offerings || [];
+
   const sendRequest = async (businessId: string) => {
     try {
       await ApiService.sendCollaborationRequest(businessId);
@@ -130,14 +132,8 @@ const formatDate = (value?: string) => {
     {
       icon: Building2,
       title: "Company Profile",
-      description: "Update your service provider profile",
+      description: "Polish your positioning & proof",
       link: "/profile",
-    },
-    {
-      icon: Rocket,
-      title: "Publish Offering",
-      description: "List SaaS tools or service packages in the marketplace",
-      link: "/listings",
     },
     {
       icon: ClipboardList,
@@ -146,34 +142,40 @@ const formatDate = (value?: string) => {
       link: "/engagements",
     },
     {
-      icon: Briefcase,
-      title: "Active Contracts",
-      description: "Manage ongoing engagements and deliverables",
-      link: "/contracts",
-    },
-    {
-      icon: DollarSign,
-      title: "Payments",
-      description: "Track payments and payouts",
-      link: "/payments",
-    },
-    {
       icon: Users,
-      title: "Customer Reviews",
-      description: "See ratings and feedback from businesses",
-      link: "/reviews",
+      title: "My Proposals",
+      description: "Track outreach you’ve sent",
+      link: "/proposals",
+    },
+    {
+      icon: Briefcase,
+      title: "Active Projects",
+      description: "Manage ongoing engagements",
+      link: "/projects",
     },
     {
       icon: Store,
+      title: "Business Opportunities",
+      description: "Browse companies & send interest",
+      link: "/businesses",
+    },
+    {
+      icon: Rocket,
       title: "Marketplace Listing",
-      description: "Preview how buyers see your offerings",
-      link: "/marketplace",
+      description: "Publish or edit your offerings",
+      link: "/listings",
     },
     {
       icon: MessageSquare,
       title: "Messages",
       description: "Chat with clients on active contracts",
       link: "/messages",
+    },
+    {
+      icon: Users,
+      title: "Reviews & Ratings",
+      description: "See feedback and respond",
+      link: "/reviews",
     },
     {
       icon: HelpCircle,
@@ -219,8 +221,8 @@ const formatDate = (value?: string) => {
                 title: "Active Contracts",
                 value: activeContracts.toString(),
                 description: "Deliverables in flight",
-                href: "/engagements",
-                action: "Manage",
+                href: "/projects",
+                action: "Open",
               },
               {
                 title: "Unread Alerts",
@@ -335,7 +337,7 @@ const formatDate = (value?: string) => {
                         Send Request
                       </Button>
                       <Button asChild variant="outline" size="sm">
-                        <Link to="/engagements">Track Leads</Link>
+                        <Link to="/businesses">View all</Link>
                       </Button>
                     </div>
                   </div>
@@ -344,7 +346,7 @@ const formatDate = (value?: string) => {
             </Card>
           ) : null}
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-12">
             <Card className="p-6">
               <div className="flex items-center gap-3 mb-4">
                 <ChartBarStacked className="h-5 w-5 text-primary" />
@@ -381,11 +383,13 @@ const formatDate = (value?: string) => {
                 <CheckCircle2 className="h-5 w-5 text-primary" />
                 <h3 className="text-xl font-semibold text-foreground">Profile Snapshot</h3>
               </div>
-              {profile?.serviceProviderProfile ? (
+              {providerProfile ? (
                 <div className="space-y-3 text-sm text-muted-foreground">
-                  <p><span className="font-semibold text-foreground">Company:</span> {profile.serviceProviderProfile.companyName}</p>
-                  <p><span className="font-semibold text-foreground">Industries:</span> {(profile.serviceProviderProfile.industryFocus || []).join(", ") || "Not set"}</p>
-                  <p><span className="font-semibold text-foreground">Integrations:</span> {(profile.serviceProviderProfile.integrations || []).join(", ") || "Not set"}</p>
+                  <p><span className="font-semibold text-foreground">Company:</span> {providerProfile.companyName}</p>
+                  <p><span className="font-semibold text-foreground">Headline:</span> {providerProfile.headline || "Not set"}</p>
+                  <p><span className="font-semibold text-foreground">Value prop:</span> {providerProfile.valueProposition || "Not set"}</p>
+                  <p><span className="font-semibold text-foreground">Industries:</span> {(providerProfile.industryFocus || []).join(", ") || "Not set"}</p>
+                  <p><span className="font-semibold text-foreground">Support:</span> {(providerProfile.supportChannels || []).join(", ") || "Not set"}</p>
                   <Button asChild variant="secondary" size="sm">
                     <Link to="/profile">Edit profile</Link>
                   </Button>
@@ -402,6 +406,37 @@ const formatDate = (value?: string) => {
                       </Button>
                     </>
                   )}
+                </div>
+              )}
+            </Card>
+
+            <Card className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <Store className="h-5 w-5 text-primary" />
+                <h3 className="text-xl font-semibold text-foreground">Featured Offerings</h3>
+              </div>
+              {featuredOfferings.length ? (
+                <div className="space-y-3">
+                  {featuredOfferings.slice(0, 3).map((offering, idx) => (
+                    <div key={`${offering.name}-${idx}`} className="border border-border/60 rounded-md p-3">
+                      <p className="font-semibold text-foreground">{offering.name}</p>
+                      <p className="text-sm text-muted-foreground">{offering.promise || "Outcome not provided"}</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {offering.priceRange && `Price: ${offering.priceRange}`}{" "}
+                        {offering.timeline && `• Timeline: ${offering.timeline}`}
+                      </p>
+                    </div>
+                  ))}
+                  <Button asChild variant="outline" size="sm" className="w-full">
+                    <Link to="/profile">Update offerings</Link>
+                  </Button>
+                </div>
+              ) : (
+                <div className="text-muted-foreground text-sm">
+                  Add at least one offering so businesses can quickly understand your packages.
+                  <Button asChild variant="secondary" size="sm" className="mt-3">
+                    <Link to="/profile">Add offering</Link>
+                  </Button>
                 </div>
               )}
             </Card>
@@ -425,7 +460,12 @@ const formatDate = (value?: string) => {
             </h2>
             <ChatInterface
               context={{
-                extras: `Service Provider: ${profile?.serviceProviderProfile?.companyName || ''}. Focus: ${(profile?.serviceProviderProfile?.industryFocus || []).join(', ')}. Suggested businesses: ${recommendedBusinesses.map((biz: any) => biz.businessName).join(', ')}`,
+                role: "service_provider",
+                companyName: providerProfile?.companyName,
+                headline: providerProfile?.headline,
+                industryFocus: providerProfile?.industryFocus,
+                keyOfferings: (providerProfile?.offerings || []).map((offering: any) => offering.name),
+                suggestedBusinesses: recommendedBusinesses.map((biz: any) => biz.businessName),
               }}
             />
           </div>
