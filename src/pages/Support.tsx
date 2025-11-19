@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { MessageSquare, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 const Support = () => {
 
   return (
@@ -30,8 +31,8 @@ const Support = () => {
                   </p>
                 </div>
               </div>
-              <Button className="w-full" variant="secondary" onClick={() => window.open("https://calendly.com/impearl-support/", "_blank")}>
-                Open AI Chatbot
+              <Button className="w-full" variant="secondary" asChild>
+                <Link to="/dashboard#ai-chat">Open AI Chatbot</Link>
               </Button>
             </Card>
 
