@@ -1,73 +1,101 @@
-# Welcome to your Lovable project
+# IMPEARL
 
-## Project info
+AI-Driven Business Automation & Freelancer Platform
 
-**URL**: https://lovable.dev/projects/031d557a-55dc-4034-a708-c86768ecd46c
+## Overview
 
-## How can I edit this code?
+IMPEARL is a platform that allows businesses and enterprises to automate. It uses AI to analyze business goals and provides companies with the right solutions and skilled freelancers. Whether you're a startup or a growing company, IMPEARL provides personalized recommendations to help you scale and grow your business efficiently.
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+### Core Functionality
+- **AI Recommendations**: Get personalized tool and automation recommendations based on your business needs and goals
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/031d557a-55dc-4034-a708-c86768ecd46c) and start prompting.
+- **Freelancer Connections**: Connect with freelancers who specialize in implementing the solutions you need
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Automation Planning**: Generate comprehensive automation plans tailored to your industry and business size
 
-**Use your preferred IDE**
+### Platform Features
+- **Business & Freelancer Profiles**: Create comprehensive profiles for smart AI-powered matching
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **AI-Assisted Q&A**: Interactive questionnaire that analyzes your business and provides personalized recommendations
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- **Marketplace Comparison**: Compare automation tools, services, and freelancers side-by-side with filtering by price, features, ratings, and compatibility
 
-Follow these steps:
+- **Payment Center**: Secure payment processing for hiring freelancers and purchasing automation tools with integrated invoicing
 
+- **Cost Calculator**: Calculate ROI and costs for different automation solutions with investment vs. returns analysis
+
+- **Community Ratings**: Real user reviews and ratings for tools and freelancers
+
+- **Chatbot Support**: 24/7 AI chatbot assistance for features, recommendations, and troubleshooting
+
+- **Base Model Generation**: Generate comprehensive automation plans and workflows tailored to your specific requirements
+
+## Technology Stack
+
+- **Frontend Framework**: React 18.3.1
+- **Build Tool**: Vite 5.4.19
+- **Language**: TypeScript 5.8.3
+- **Routing**: React Router DOM 6.30.1
+- **UI Components**: shadcn-ui (Radix UI primitives)
+- **Styling**: Tailwind CSS 3.4.17
+- **State Management**: TanStack Query 5.83.0
+- **Form Handling**: React Hook Form 7.61.1 with Zod validation
+- **Icons**: Lucide React 0.462.0
+- **Charts**: Recharts 2.15.4
+- **Notifications**: Sonner 1.7.4
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (recommended: install with [nvm](https://github.com/nvm-sh/nvm#installing-and-updating))
+- npm or bun package manager
+
+### Installation
+
+1. Clone the repository:
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
 git clone <YOUR_GIT_URL>
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+2. Navigate to the project directory:
+```sh
+cd Impearl-main
+```
 
-# Step 3: Install the necessary dependencies.
-npm i
+3. Install dependencies:
+```sh
+npm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+### Development
+
+Start the development server with hot-reload:
+```sh
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+The application will be available at the local development server URL shown in the terminal.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Build
 
-**Use GitHub Codespaces**
+Create a production build:
+```sh
+npm run build
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Create a development build:
+```sh
+npm run build:dev
+```
 
-## What technologies are used for this project?
+Preview the production build:
+```sh
+npm run preview
+```
 
-This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/031d557a-55dc-4034-a708-c86768ecd46c) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Development Notes
+... (8 lines left)
